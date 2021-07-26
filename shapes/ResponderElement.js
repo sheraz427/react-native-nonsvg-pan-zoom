@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { G } from 'react-native-svg';
-const GView = G;
 export default class ResponderElement extends Component {
     constructor() {
         super(...arguments);
         this.releasedNaturally = true;
     }
     render() {
-        return (<GView x={this.props.x} y={this.props.y} onStartShouldSetResponder={(evt) => true} onMoveShouldSetResponder={(evt) => false} onResponderGrant={(evt) => {
+        return (<View x={this.props.x} y={this.props.y} onStartShouldSetResponder={(evt) => true} onMoveShouldSetResponder={(evt) => false} onResponderGrant={(evt) => {
             this.releasedNaturally = true;
             this.props.onClick(evt);
         }} onResponderTerminationRequest={(evt) => {
@@ -24,7 +22,7 @@ export default class ResponderElement extends Component {
             }
         }}>
         {this.props.children}
-      </GView>);
+      </View>);
     }
 }
 ResponderElement.defaultProps = {

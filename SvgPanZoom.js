@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { View, PanResponder, Animated, StyleSheet } from 'react-native';
-import Svg from 'react-native-svg';
-const SvgView = Svg;
 import { createIdentityTransform, calcDistance, calcCenter, createScalingMatrix, createTranslationMatrix, viewTransformMult, getBoundedPinchTransform, getBoundedTouchTransform } from './util';
 /*********************************************************
  * Component
@@ -235,21 +233,24 @@ export default class SvgPanZoom extends Component {
                 flex: 1,
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
+                overflow:'hidden',
+                marginRight:30
             },
             viewStyle
         ])} onLayout={this._onLayout} {...this.prInstance.panHandlers}>
 
-        <Animated.View style={Object.assign({ width: canvasWidth, height: canvasHeight, transform: [
+        <Animated.View style={Object.assign({ width: canvasWidth, height: canvasHeight, 
+        transform: [
                 { translateX: this.state.TranslationAnimation.x },
                 { translateY: this.state.TranslationAnimation.y },
                 { scale: this.state.scaleAnimation }
             ] }, canvasStyle)}>
-          <SvgView style={{
+          <View style={{
             width: canvasWidth,
             height: canvasHeight,
         }}>
             {children}
-          </SvgView>
+          </View>
         </Animated.View>
 
       </View>);
