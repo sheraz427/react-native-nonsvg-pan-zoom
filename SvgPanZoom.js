@@ -179,7 +179,10 @@ export default class SvgPanZoom extends Component {
         this.prInstance = PanResponder.create({
             onStartShouldSetPanResponder: (evt, gestureState) => false,
             onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
+            onMoveShouldSetPanResponder: (evt, gestureState) => {
+                //return true if user is swiping, return false if it's a single click
+                            return !(gestureState.dx === 0 && gestureState.dy === 0)                  
+            },
             onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
             onPanResponderGrant: (evt, gestureState) => {
                 // Set self for filtering events from other PanResponderTarges
