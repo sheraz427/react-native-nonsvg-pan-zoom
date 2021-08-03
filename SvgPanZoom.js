@@ -177,13 +177,10 @@ export default class SvgPanZoom extends Component {
     componentWillMount() {
         this.state.scaleAnimation.addListener((zoom) => { this.props.onZoom(zoom.value); });
         this.prInstance = PanResponder.create({
-            onStartShouldSetPanResponder: (evt, gestureState) => false,
-            // onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-            onMoveShouldSetPanResponder: (evt, gestureState) => {
-                //return true if user is swiping, return false if it's a single click
-                            return !(gestureState.dx === 0 && gestureState.dy === 0)                  
-            },
-            // onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
+            onStartShouldSetPanResponder:        ( e, state ) => false,
+            onStartShouldSetPanResponderCapture: ( e, state ) => false,
+            onMoveShouldSetPanResponder:         ( e, state ) => true,
+            onMoveShouldSetPanResponderCapture:  ( e, state ) => true,
             onPanResponderGrant: (evt, gestureState) => {
                 // Set self for filtering events from other PanResponderTarges
                 if (this.prTargetSelf == null) {
@@ -259,7 +256,7 @@ export default class SvgPanZoom extends Component {
       </View>);
     }
     getInitialViewTransform(canvasWidth, canvasHeight, scale) {
-        return viewTransformMult(createTranslationMatrix(-(canvasWidth - canvasWidth * scale) / 2, -(canvasHeight - canvasHeight * scale) / 2), createScalingMatrix(scale));
+        return viewTransformMult(createTranslationMatrix(-(canvasWidth - canvasWidth  scale) / 2, -(canvasHeight - canvasHeight  scale) / 2), createScalingMatrix(scale));
     }
 }
 SvgPanZoom.defaultProps = {
