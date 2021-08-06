@@ -176,11 +176,14 @@ export default class SvgPanZoom extends Component {
     }
     componentWillMount() {
         this.state.scaleAnimation.addListener((zoom) => { this.props.onZoom(zoom.value); });
+        const touchThreshold = 5;
         this.prInstance = PanResponder.create({
-            onStartShouldSetPanResponder:        ( e, state ) => false,
-            onStartShouldSetPanResponderCapture: ( e, state ) => false,
-            onMoveShouldSetPanResponder:         ( e, state ) => true,
-            onMoveShouldSetPanResponderCapture:  ( e, state ) => true,
+            onStartShouldSetPanResponder: () => false,
+            onMoveShouldSetPanResponder: (e, gestureState) => {
+                const { dx, dy,numberActiveTouches } = gestureState;
+
+                return (Math.abs(dx) > touchThreshold) || (Math.abs(dy) > touchThreshold) || numberActiveTouches >1;
+            },
             onPanResponderGrant: (evt, gestureState) => {
                 // Set self for filtering events from other PanResponderTarges
                 if (this.prTargetSelf == null) {
@@ -233,30 +236,32 @@ export default class SvgPanZoom extends Component {
                 flex: 1,
                 justifyContent: 'flex-start',
                 alignItems: 'flex-start',
-                overflow:'hidden',
-                marginRight:30
+                overflow: 'hidden',
+                marginRight: 30
             },
             viewStyle
         ])} onLayout={this._onLayout} {...this.prInstance.panHandlers}>
 
-        <Animated.View style={Object.assign({ width: canvasWidth, height: canvasHeight, 
-        transform: [
-                { translateX: this.state.TranslationAnimation.x },
-                { translateY: this.state.TranslationAnimation.y },
-                { scale: this.state.scaleAnimation }
-            ] }, canvasStyle)}>
-          <View style={{
-            width: canvasWidth,
-            height: canvasHeight,
-        }}>
-            {children}
-          </View>
-        </Animated.View>
+            <Animated.View style={Object.assign({
+                width: canvasWidth, height: canvasHeight,
+                transform: [
+                    { translateX: this.state.TranslationAnimation.x },
+                    { translateY: this.state.TranslationAnimation.y },
+                    { scale: this.state.scaleAnimation }
+                ]
+            }, canvasStyle)}>
+                <View style={{
+                    width: canvasWidth,
+                    height: canvasHeight,
+                }}>
+                    {children}
+                </View>
+            </Animated.View>
 
-      </View>);
+        </View>);
     }
     getInitialViewTransform(canvasWidth, canvasHeight, scale) {
-        return viewTransformMult(createTranslationMatrix(-(canvasWidth - canvasWidth  scale) / 2, -(canvasHeight - canvasHeight  scale) / 2), createScalingMatrix(scale));
+        return viewTransformMult(createTranslationMatrix(-(canvasWidth - canvasWidth * scale) / 2, -(canvasHeight - canvasHeight * scale) / 2), createScalingMatrix(scale));
     }
 }
 SvgPanZoom.defaultProps = {
